@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c3d7a7d-3337-48a5-b5f4-3f618954eee8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Main.hs" beforeDir="false" afterPath="$PROJECT_DIR$/app/Main.hs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Lib.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Lib.hs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wolfram-exe" beforeDir="false" afterPath="$PROJECT_DIR$/wolfram-exe" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,12 +39,12 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/mrabot/tek/ASM/B-ASM-400-LYN-4-1-asmminilibc-mael.rabot",
+    "last_opened_file_path": "/home/mrabot/tek/FONCTIONAL/B-FUN-400-LYN-4-1-wolfram-mael.rabot",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -48,6 +52,21 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="B-FUN-400-LYN-4-1-wolfram-mael.rabot" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="B-FUN-400-LYN-4-1-wolfram-mael.rabot" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -59,10 +78,19 @@
       <updated>1707745667966</updated>
       <workItem from="1707745668991" duration="577000" />
       <workItem from="1707746255645" duration="8947000" />
+      <workItem from="1707762087003" duration="6935000" />
+      <workItem from="1707809978062" duration="245000" />
+      <workItem from="1707810228943" duration="15000" />
+      <workItem from="1707810251495" duration="35000" />
+      <workItem from="1707810292306" duration="3714000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -14,4 +14,6 @@ import System.Exit (exitWith, ExitCode(..))
 main :: IO ()
 main = do
     args <- getArgs
-    maybe (exitWith (ExitFailure 84)) (print) (parseAndCheckArgs args)
+    case (parseOptions args >>= checkArgs) of
+        Nothing -> exitWith (ExitFailure 84)
+        Just conf' -> applyRuleNTimes conf' [True]

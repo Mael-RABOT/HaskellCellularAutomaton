@@ -21,13 +21,13 @@ defaultConf = Conf Nothing (Just 0) Nothing (Just 80) (Just 0)
 
 f :: Conf -> [String] -> Maybe Conf
 f conf [] = Just conf
-f (Conf _ b c d e) ("-rule":arg:rest) =f (Conf (readMaybe arg) b c d e) rest
-f (Conf a _ c d e) ("-start":arg:rest) = f (Conf a (readMaybe arg) c d e) rest
-f (Conf a b _ d e) ("-lines":arg:rest) =
+f (Conf _ b c d e) ("--rule":arg:rest) =f (Conf (readMaybe arg) b c d e) rest
+f (Conf a _ c d e) ("--start":arg:rest) = f (Conf a (readMaybe arg) c d e) rest
+f (Conf a b _ d e) ("--lines":arg:rest) =
     let newLines = fmap (\x -> x - 1) (readMaybe arg)
     in f (Conf a b newLines d e) rest
-f (Conf a b c _ e) ("-window":arg:rest) = f (Conf a b c (readMaybe arg) e) rest
-f (Conf a b c d _) ("-move":arg:rest) = f (Conf a b c d (readMaybe arg)) rest
+f (Conf a b c _ e) ("--window":arg:rest) = f (Conf a b c (readMaybe arg) e) rest
+f (Conf a b c d _) ("--move":arg:rest) = f (Conf a b c d (readMaybe arg)) rest
 f _ _ = Nothing
 
 parseOptions :: [String] -> Maybe Conf

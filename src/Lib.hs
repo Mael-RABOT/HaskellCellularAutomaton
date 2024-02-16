@@ -8,25 +8,24 @@
 module Lib
     ( parseOptions
     , checkArgs
-    , applyRuleNTimes
+    , mainLoop
     ) where
 
 import Text.Read (readMaybe)
 
 data Conf = Conf (Maybe Int) (Maybe Int) (Maybe Int) (Maybe Int) (Maybe Int)
-    deriving Show
 
 defaultConf :: Conf
-defaultConf = Conf Nothing (Just 0) Nothing (Just 80) (Just 0)
+defaultConf = Conf Nothing (Just 0) Nothing (Just 79) (Just 0)
 
 f :: Conf -> [String] -> Maybe Conf
 f conf [] = Just conf
 f (Conf _ b c d e) ("--rule":arg:rest) =f (Conf (readMaybe arg) b c d e) rest
 f (Conf a _ c d e) ("--start":arg:rest) = f (Conf a (readMaybe arg) c d e) rest
-f (Conf a b _ d e) ("--lines":arg:rest) =
-    let newLines = fmap (\x -> x - 1) (readMaybe arg)
-    in f (Conf a b newLines d e) rest
-f (Conf a b c _ e) ("--window":arg:rest) = f (Conf a b c (readMaybe arg) e) rest
+f (Conf a b _ d e) ("--lines":arg:rest) = f (Conf a b (readMaybe arg) d e) rest
+f (Conf a b c _ e) ("--window":arg:rest) =
+    let newWindows = fmap (\x -> x - 1) (readMaybe arg)
+    in f (Conf a b c newWindows e) rest
 f (Conf a b c d _) ("--move":arg:rest) = f (Conf a b c d (readMaybe arg)) rest
 f _ _ = Nothing
 
@@ -70,27 +69,18 @@ display _ [] = pure ()
 display (Conf _ _ _ (Just window) (Just move)) xs =
     let len = length xs
         halfWindow = window `div` 2
-        start = max 0 (len `div` 2 - halfWindow + move)
-    in putStrLn $ replicate (halfWindow - len `div` 2 + move) ' '
-        ++ take window (drop start xs)
+        offset = if window `mod` 2 == 0 then 1 else 0
+        start = min len (max 0 (len `div` 2 - halfWindow + move + offset))
+        line = take window (drop start xs)
+        spacesBefore = replicate (max 0 (halfWindow - len `div` 2 + move + offset)) ' '
+        spacesAfter = replicate (window - length line - length spacesBefore) ' '
+    in putStrLn $ spacesBefore ++ line ++ spacesAfter
 display _ _ = pure ()
 
-applyRuleNTimes :: Conf -> [Bool] -> IO ()
-applyRuleNTimes conf@(Conf _ (Just start) Nothing _ _) xs
-    | start > 0 = applyRuleNTimes (Conf (
-            Just 30) (Just (start-1))
-            Nothing (Just 80) (Just 0)) (applyRule conf xs)
-    | otherwise = display conf (map boolToChar xs) >>= \_ ->
-        applyRuleNTimes conf (applyRule conf xs)
-
-applyRuleNTimes conf@(Conf _ (Just start) (Just 0) _ _) xs
-    | start > 0 = return ()
-    | otherwise = display conf (map boolToChar xs)
-
-applyRuleNTimes conf@(Conf a (Just start) (Just n) d e) xs
-    | start > 0 = applyRuleNTimes (
-        Conf a (Just (start-1)) (Just n) d e) (applyRule conf xs)
-    | otherwise = display conf (map boolToChar xs) >>= \_ ->
-        applyRuleNTimes (
-            Conf a (Just start) (Just (n-1)) d e) (applyRule conf xs)
-applyRuleNTimes _ _ = pure ()
+mainLoop :: Conf -> [Bool] -> IO ()
+mainLoop conf@(Conf _ _ (Just n) _ _) xs =
+    mapM_ (display conf . map boolToChar) $ take n $ iterate (applyRule conf) xs
+mainLoop conf xs =
+    mapM_ (display conf . map boolToChar) $ takeWhile notEmpty $ iterate (applyRule conf) xs
+  where
+    notEmpty = not . null

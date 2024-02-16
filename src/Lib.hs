@@ -59,7 +59,7 @@ applyRule :: Conf -> [Bool] -> [Bool]
 applyRule (Conf (Just 30) _ _ _ _) xs = True : rule30 xs ++ [True]
 applyRule (Conf (Just 90) _ _ _ _) xs = True : rule90 xs ++ [True]
 applyRule (Conf (Just 110) _ _ _ _) xs = True : rule110 xs ++ [True]
-applyRule _ _ = error "Invalid rule"
+applyRule _ xs = xs
 
 boolToChar :: Bool -> Char
 boolToChar True = '*'
@@ -73,7 +73,7 @@ display (Conf _ _ _ (Just window) (Just move)) xs =
         start = max 0 (len `div` 2 - halfWindow + move)
     in putStrLn $ replicate (halfWindow - len `div` 2 + move) ' '
         ++ take window (drop start xs)
-display _ _ = error "Invalid window or move"
+display _ _ = pure ()
 
 applyRuleNTimes :: Conf -> [Bool] -> IO ()
 applyRuleNTimes conf@(Conf _ (Just start) Nothing _ _) xs
@@ -93,4 +93,4 @@ applyRuleNTimes conf@(Conf a (Just start) (Just n) d e) xs
     | otherwise = display conf (map boolToChar xs) >>= \_ ->
         applyRuleNTimes (
             Conf a (Just start) (Just (n-1)) d e) (applyRule conf xs)
-applyRuleNTimes _ _ = error "Invalid start or lines"
+applyRuleNTimes _ _ = pure ()

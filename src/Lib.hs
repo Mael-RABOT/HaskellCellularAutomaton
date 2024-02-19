@@ -72,8 +72,8 @@ display (Conf _ _ _ (Just window) (Just move)) xs =
         offset = if window `mod` 2 == 0 then 1 else 0
         start = min len (max 0 (len `div` 2 - halfWindow + move + offset))
         line = take window (drop start xs)
-        spacesBefore = replicate (max 0 (halfWindow - len `div` 2 + move + offset)) ' '
-        spacesAfter = replicate (window - length line - length spacesBefore) ' '
+        spacesBefore = replicate (max 0 ((halfWindow - len `div` 2 + move + offset) + 1)) ' '
+        spacesAfter = replicate ((window - length line - length spacesBefore) + 1) ' '
     in putStrLn $ spacesBefore ++ line ++ spacesAfter
 display _ _ = pure ()
 

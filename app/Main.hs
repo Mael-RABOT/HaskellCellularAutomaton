@@ -22,4 +22,4 @@ main = do
                 ++ "(-start [starting line number] -lines [number of lines] "
                 ++ "-window [number of cells] -move [number of moves])")
                 >> exitWith (ExitFailure 84)
-        Just conf -> mainLoop conf [True]
+        Just conf -> iterateWorld conf defaultMap

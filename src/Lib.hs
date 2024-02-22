@@ -16,6 +16,7 @@ module Lib
     ) where
 
 import Text.Read (readMaybe)
+import Data.Maybe (fromMaybe)
 
 data Conf = Conf (Maybe Int) (Maybe Int) (Maybe Int) (Maybe Int) (Maybe Int)
     deriving Show
@@ -58,45 +59,43 @@ mapToString (Map left right) = map boolToChar (reverse left ++ right)
 
 displayWorld :: Map -> Conf -> IO ()
 displayWorld (Map left right) (Conf _ _ _ window _) =
-    let windowSize = maybe 40 (`div` 2) window
-        windowSizeAdjusted = if even windowSize
-            then windowSize - 1 else windowSize
-        leftPart = reverse $ take windowSizeAdjusted left
-        rightPart = take windowSize right
-    in putStrLn $ mapToString (Map leftPart rightPart)
+    let windowSize = fromMaybe 40 window
+        halfWindowSize = windowSize `div` 2
+        leftPart = reverse $ take halfWindowSize left
+        rightPart = take (windowSize - halfWindowSize) right
+    in putStrLn $ mapToString (Map (reverse leftPart) rightPart)
 
-rule30 :: [Bool] -> [Bool]
-rule30 xs = map rule30Cell (zip3 (False:xs) xs (tail xs ++ [False]))
-  where
-    rule30Cell (a, b, c) = a /= (b || c)
+rule30 :: Bool -> Bool -> Bool -> Bool
+rule30 a b c = a /= (b || c)
 
-rule90 :: [Bool] -> [Bool]
-rule90 xs = map rule90Cell (zip3 (False:xs) xs (tail xs ++ [False]))
-  where
-    rule90Cell (a, _, c) = a /= c
+rule90 :: Bool -> Bool -> Bool -> Bool
+rule90 a _ c = a /= c
 
-rule110 :: [Bool] -> [Bool]
-rule110 xs = map rule110Cell (zip3 (False:xs) xs (tail xs ++ [False]))
-  where
-    rule110Cell (a, b, c) = (not a && b) || (b && not c) || (not b && c)
+rule110 :: Bool -> Bool -> Bool -> Bool
+rule110 a b c = (not a && b) || (b && not c) || (not b && c)
 
-chooseRule :: Int -> [Bool] -> [Bool]
+chooseRule :: Int -> Bool -> Bool -> Bool -> Bool
 chooseRule 30 = rule30
 chooseRule 90 = rule90
 chooseRule 110  = rule110
-chooseRule _ = error "Invalid rule"
+chooseRule _ = (\_ b _ -> b)
 
 applyRule :: Int -> Map -> Map
-applyRule rule (Map left right) =
-    let ruleFunc = chooseRule rule
-        newLeft = ruleFunc left
-        newRight = ruleFunc right
-    in Map newLeft newRight
+applyRule rule (Map left right) = Map newLeft newRight
+  where
+    newRight = zipWith3
+        (chooseRule rule) (head left : init right) right (tail right)
+    newLeft = zipWith3
+        (chooseRule rule) (tail left) left (head right : init left)
 
 iterateWorld :: Conf -> Map -> IO ()
 iterateWorld (Conf _ _ (Just 0) _ _) _ = return ()
-iterateWorld conf@(Conf (Just rule) b (Just line) d e) world =
-    displayWorld world conf >>
-    iterateWorld (Conf (Just rule) b (Just(line - 1)) d e)
-        (applyRule rule world)
+iterateWorld conf@(Conf (Just rule) (Just start) (Just line) d e) world =
+    if start > 0 then
+        iterateWorld (Conf (Just rule) (Just (start - 1)) (Just line) d e)
+            (applyRule rule world)
+    else
+        displayWorld world conf >>
+        iterateWorld (Conf (Just rule) (Just start) (Just(line - 1)) d e)
+            (applyRule rule world)
 iterateWorld _ _ = return ()

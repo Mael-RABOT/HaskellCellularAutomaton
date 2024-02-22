@@ -58,11 +58,12 @@ mapToString (Map left right) = map boolToChar (reverse left ++ right)
     boolToChar False = ' '
 
 displayWorld :: Map -> Conf -> IO ()
-displayWorld (Map left right) (Conf _ _ _ window _) =
+displayWorld (Map left right) (Conf _ _ _ window move) =
     let windowSize = fromMaybe 40 window
         halfWindowSize = windowSize `div` 2
-        leftPart = reverse $ take halfWindowSize left
-        rightPart = take (windowSize - halfWindowSize) right
+        moveSize = fromMaybe 0 move
+        leftPart = reverse $ take (halfWindowSize + moveSize) left
+        rightPart = take (windowSize - halfWindowSize - moveSize) right
     in putStrLn $ mapToString (Map (reverse leftPart) rightPart)
 
 rule30 :: Bool -> Bool -> Bool -> Bool

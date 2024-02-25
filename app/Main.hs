@@ -1,8 +1,8 @@
 {-
 -- EPITECH PROJECT, 2024
--- repo
+-- B-FUN-400-LYN-4-1-wolfram-mael.rabot
 -- File description:
--- file
+-- Main.hs
 -}
 
 module Main (main) where
